@@ -12,6 +12,8 @@ OBJ=$(SRC:%.cc=%.o)
 EXE=$(SRC:%.cc=exec/%)
 
 all: $(EXE) exec/motb
+all: $(EXE) exec/filesystem_test
+
 
 .PHONY: .FORCE
 
@@ -33,6 +35,12 @@ exec/motb: .FORCE
 	@echo -n "Build Date: " >> $@
 	@date >> $@
 	@echo >> $@
+
+exec/filesystem_test: .FORCE
+	@echo creating $@
+	@mkdir -p exec
+	@echo "Hi Testing my filesystem" >> $@
+
 
 echo:
 	@echo SRC: $(SRC)
