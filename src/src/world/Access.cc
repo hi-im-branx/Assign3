@@ -1,5 +1,5 @@
 /******************************************************************************
-    Copyright © 2012-2015 Martin Karsten
+    Copyright ï¿½ 2012-2015 Martin Karsten
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 #include <cstring>
 
 map<string,RamFile> kernelFS;
+map<string, RamFile2> kernelFS2;
 
 ssize_t FileAccess::pread(void *buf, size_t nbyte, off_t o) {
   if (o + nbyte > rf.size) nbyte = rf.size - o;
@@ -35,6 +36,32 @@ ssize_t FileAccess::read(void *buf, size_t nbyte) {
 }
 
 off_t FileAccess::lseek(off_t o, int whence) {
+  off_t new_o;
+  switch (whence) {
+    case SEEK_SET: new_o = o; break;
+    case SEEK_CUR: new_o = offset + o; break;
+    case SEEK_END: new_o = rf.size + o; break;
+    default: return -EINVAL;
+  }
+  if (new_o < 0) return -EINVAL;
+  offset = new_o;
+  return offset;
+}
+
+ssize_t FileAccess2::pread(void *buf, size_t nbyte, off_t o) {
+  if (o + nbyte > rf.size) nbyte = rf.size - o;
+  memcpy( buf, (bufptr_t)(rf.vma + o), nbyte );
+  return nbyte;
+}
+
+ssize_t FileAccess2::read(void *buf, size_t nbyte) {
+  olock.acquire();
+  ssize_t len = pread(buf, nbyte, offset);
+  if (len >= 0) offset += len;
+  olock.release();
+  return len;
+}
+off_t FileAccess2::lseek(off_t o, int whence) {
   off_t new_o;
   switch (whence) {
     case SEEK_SET: new_o = o; break;

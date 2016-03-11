@@ -1,5 +1,5 @@
 /******************************************************************************
-    Copyright © 2012-2015 Martin Karsten
+    Copyright ï¿½ 2012-2015 Martin Karsten
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,7 +43,16 @@ struct RamFile {
   RamFile(vaddr v, paddr p, size_t s) : vma(v), pma(p), size(s) {}
 };
 
+struct RamFile2 { // For assign 3
+  vaddr vma;
+  paddr pma;
+  size_t size;
+  RamFile2(vaddr v, paddr p, size_t s) : vma(v), pma(p), size(s) {}
+};
+
 extern map<string,RamFile> kernelFS;
+
+extern map<string, RamFile2> kernelFS2; // For assign 3
 
 class FileAccess : public Access {
   SpinLock olock;
@@ -53,6 +62,18 @@ public:
   FileAccess(const RamFile& rf) : offset(0), rf(rf) {}
   virtual ssize_t pread(void *buf, size_t nbyte, off_t o);
   virtual ssize_t read(void *buf, size_t nbyte);
+  virtual off_t lseek(off_t o, int whence);
+};
+
+class FileAccess2 : public Access {
+  SpinLock olock;
+  off_t offset;
+  const RamFile2 &rf;
+public:
+  FileAccess2(const RamFile2& rf) : offset(0), rf(rf) {}
+  virtual ssize_t pread(void *buf, size_t nbyte, off_t o);
+  virtual ssize_t read(void *buf, size_t nbyte);
+  //virtual ssize_t write(void *buf, size_t nybyte);
   virtual off_t lseek(off_t o, int whence);
 };
 

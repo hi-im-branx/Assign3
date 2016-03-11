@@ -1,5 +1,5 @@
 /******************************************************************************
-    Copyright © 2012-2015 Martin Karsten
+    Copyright ï¿½ 2012-2015 Martin Karsten
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -172,6 +172,7 @@ void Multiboot::readModules(vaddr disp) {
       string cmd = tm->cmdline;
       string name = cmd.substr(0, cmd.find_first_of(' '));
       kernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );
+      //kernelFS2.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );
     }
   }
 }
