@@ -73,9 +73,14 @@ ssize_t FileAccess2::read(char *buf, size_t nbyte) {
 
 ssize_t FileAccess2::write(char a, size_t nbyte) {
   int startR = rf.start;
+  void* pttr;
+  char* charPttr;
+  pttr = charPttr;
   if (startR != Access::veryLastCounter) {
     for (int i=0; i < rf.size; i++){
       Access::memoryArray[startR + i] = '\0';
+      pttr = &Access::memoryArray[startR + i];
+      memcpy((bufptr_t)(rf.vma + offset + i), pttr, 1);
     }
     startR = Access::veryLastCounter;
     Access::memoryArray[startR] = a;
@@ -87,6 +92,6 @@ ssize_t FileAccess2::write(char a, size_t nbyte) {
     Access::memoryArray[Access::veryLastCounter] = a;
     Access::veryLastCounter++;
   }
-
+  //memcpy((bufptr_t)(rf.vma + offset + (Access::veryLastCounter - offset)), (offset+Access::veryLastCounter), nbyte );
   return nbyte;
 }
