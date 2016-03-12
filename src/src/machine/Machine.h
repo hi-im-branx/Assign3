@@ -38,7 +38,7 @@ class Machine : public NoObject {
   static void bootCleanup();
 
 public:
-  static char memoryArray[];
+  //extern char memoryArray[1000000];
   static void initAP(mword idx)                        __section(".boot.text");
   static void initBSP(mword mag, vaddr mb, mword idx)  __section(".boot.text");
   static void bootMain();

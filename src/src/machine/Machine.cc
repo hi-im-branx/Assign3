@@ -371,12 +371,14 @@ apDone:
   StdOut.print(kendl);
 
   // Allocation of Space //
-  char memoryArray[100000];
+  //char memoryArray [100000];
+
   ///////////////////////////
 
   DBG::outl(DBG::Boot, "Building kernel filesystem...");
   // initialize kernel file system with boot modules
   Multiboot::readModules(kernelBase);
+  Multiboot::readModules2(kernelBase);
 
   // more info from ACPI; could find IOAPIC interrupt pins for PCI devices
   initACPI2(); // needs "current thread"

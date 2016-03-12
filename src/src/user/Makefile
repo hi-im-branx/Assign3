@@ -38,6 +38,7 @@ exec/motb: .FORCE
 exec/filesystem_test: .FORCE
 	@echo creating $@
 	@mkdir -p exec
+	@echo > $@	
 	@echo "Hi Testing my filesystem" >> $@
 
 echo:

@@ -1,5 +1,5 @@
 /******************************************************************************
-    Copyright © 2012-2015 Martin Karsten
+    Copyright ï¿½ 2012-2015 Martin Karsten
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ public:
   static vaddr getRSDP()                              __section(".boot.text");
   static void getMemory(RegionSet<Region<paddr>>& rs) __section(".boot.text");
   static void readModules(vaddr disp)                 __section(".boot.text");
+  static void readModules2(vaddr disp)                 __section(".boot.text");
 };
 
 #endif /* _Multiboot_h_ */

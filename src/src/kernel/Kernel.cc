@@ -54,7 +54,7 @@ void kosMain() {
 
  }
 
-
+/*
   KOUT::outl("Testing our FS!", kendl);
   auto iter2 = kernelFS2.find("filesystem_test");
   if (iter2 == kernelFS2.end()) {
@@ -73,6 +73,7 @@ void kosMain() {
 //      KOUT::outl(c);
 //    }
   }
+  */
 
 
 

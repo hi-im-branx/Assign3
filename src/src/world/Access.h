@@ -44,10 +44,9 @@ struct RamFile {
 };
 
 struct RamFile2 { // For assign 3
-  vaddr vma;
-  paddr pma;
-  size_t size;
-  RamFile2(vaddr v, paddr p, size_t s) : vma(v), pma(p), size(s) {}
+  int start;
+  int size;
+  RamFile2(int t, int s) : start(t), size(s) {}
 };
 
 extern map<string,RamFile> kernelFS;

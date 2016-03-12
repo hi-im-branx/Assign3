@@ -47,7 +47,7 @@ off_t FileAccess::lseek(off_t o, int whence) {
   offset = new_o;
   return offset;
 }
-
+/*
 ssize_t FileAccess2::pread(void *buf, size_t nbyte, off_t o) {
   if (o + nbyte > rf.size) nbyte = rf.size - o;
   memcpy( buf, (bufptr_t)(rf.vma + o), nbyte );
@@ -73,3 +73,4 @@ off_t FileAccess2::lseek(off_t o, int whence) {
   offset = new_o;
   return offset;
 }
+*/
