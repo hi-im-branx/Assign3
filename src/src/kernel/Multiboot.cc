@@ -20,10 +20,10 @@
 #include "world/Access.h"
 #include "machine/Machine.h"
 #include "kernel/Clock.h"
-
 #include "extern/multiboot/multiboot2.h"
 
 
+//char Multiboot::memoryArray[100000];
 // cf. 'multiboot_mmap_entry' in extern/multiboot/multiboot2.h
 static const char* memtype[] __section(".boot.data") = {
   "unknown", "free", "resv", "acpi", "nvs", "bad"
@@ -183,13 +183,9 @@ void Multiboot::readModules(vaddr disp) {
 
 void Multiboot::readModules2(vaddr disp) {
   int counter = 0;
-//  char *pointer;
   int counterStart;
   int counterEnd;
-  char memoryArray[1000000];
-  char a = '0';
-  char b = '0';
-//  size_t nbyte = 1;
+
   FORALLTAGS(tag, mbiStart, mbiEnd) {
     if (tag->type == MULTIBOOT_TAG_TYPE_MODULE) {
       multiboot_tag_module* tm = (multiboot_tag_module*)tag;
@@ -198,7 +194,6 @@ void Multiboot::readModules2(vaddr disp) {
       counterStart = counter;
       auto iter3 = kernelFS.find(name);
       KOUT::outl(name);
-    //  Clock::wait(10000);
       if (iter3 == kernelFS.end()) {
         KOUT::outl("Couldnt find the file!!!!!!!!!!!!!!!!");
       }  else {
@@ -206,26 +201,20 @@ void Multiboot::readModules2(vaddr disp) {
         for (;;) {
           char c;
           if (f.read(&c, 1) == 0) break;
-          memoryArray[counter] = c;
-          //KOUT::outl(c);
+          Access::memoryArray[counter] = c;
+        //  KOUT::outl(Access::memoryArray[counter]);
           counter++;
-        //  KOUT::outl(c);
         }
       }
       counterEnd = counter;
-      Clock::wait(1000);
-      //a = memoryArray[1];
-    //  b = memoryArray[2];
-      //KOUT::outl(a);
-    //  KOUT::outl(b);
 
-      kernelFS2.insert( {name, {counterStart, counterEnd - counterStart}});
+      //Clock::wait(10000);
+      kernelFS2.insert( {name, {tm->mod_start + disp, tm->mod_start, counterStart, counterEnd - counterStart}});
 
 
     }
   }
-//  KOUT::outl(a);
-//  KOUT::outl(b);
+  Access::veryLastCounter = counter;
 }
 
 //  pointer = &c;

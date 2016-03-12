@@ -23,6 +23,7 @@
 class Multiboot {
   static vaddr mbiStart                               __section(".boot.data");
   static vaddr mbiEnd                                 __section(".boot.data");
+
   static void initDebug(bool msg)                     __section(".boot.text");
 public:
   static vaddr init(mword magic, vaddr mbi)           __section(".boot.text");

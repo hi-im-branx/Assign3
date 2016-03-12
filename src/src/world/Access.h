@@ -34,6 +34,8 @@ public:
   virtual ssize_t read(void *buf, size_t nbyte) { return -EBADF; }
   virtual ssize_t write(const void *buf, size_t nbyte) { return -EBADF; }
   virtual off_t lseek(off_t o, int whence) { return -EBADF; }
+  static char memoryArray[100000];
+  static int veryLastCounter;
 };
 
 struct RamFile {
@@ -44,9 +46,11 @@ struct RamFile {
 };
 
 struct RamFile2 { // For assign 3
+  vaddr vma;
+  paddr pma;
   int start;
   int size;
-  RamFile2(int t, int s) : start(t), size(s) {}
+  RamFile2(vaddr v, paddr p, int t, int s) : vma(v), pma(p), start(t), size(s) {}
 };
 
 extern map<string,RamFile> kernelFS;
@@ -69,11 +73,12 @@ class FileAccess2 : public Access {
   off_t offset;
   const RamFile2 &rf;
 public:
-  FileAccess2(const RamFile2& rf) : offset(0), rf(rf) {}
-  virtual ssize_t pread(void *buf, size_t nbyte, off_t o);
-  virtual ssize_t read(void *buf, size_t nbyte);
+  FileAccess2(const RamFile2& rf) : offset(rf.start), rf(rf) {}
+  //virtual ssize_t pread(void *buf, size_t nbyte, off_t o);
+  virtual ssize_t read(char *buf, size_t nbyte);
+  virtual ssize_t write(char *buf, size_t nbyte);
   //virtual ssize_t write(void *buf, size_t nybyte);
-  virtual off_t lseek(off_t o, int whence);
+  //virtual off_t lseek(off_t o, int whence);
 };
 
 class KernelOutput;

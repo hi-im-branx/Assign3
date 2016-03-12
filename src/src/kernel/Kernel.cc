@@ -24,6 +24,8 @@
 
 #include "main/UserMain.h"
 
+#include <array>
+
 AddressSpace kernelSpace(true); // AddressSpace.h
 volatile mword Clock::tick;     // Clock.h
 
@@ -54,27 +56,59 @@ void kosMain() {
 
  }
 
-/*
+
   KOUT::outl("Testing our FS!", kendl);
   auto iter2 = kernelFS2.find("filesystem_test");
   if (iter2 == kernelFS2.end()) {
     KOUT::outl("Couldnt find the file!");
   }  else {
+    //KOUT::outl(iter2->second.start);
     FileAccess2 f(iter2->second);
     for (;;) {
       char c;
-      if (f.read(&c, 1) == 0) break;
-      KOUT::outl(c);
+     if (f.read(&c, 1) == 0) break;
+     KOUT::out1(c);
     }
-    KOUT::outl();
+    KOUT::outl("found");
+  }
+    auto iter5 = kernelFS2.find("filesystem_test");
+    if (iter5 == kernelFS2.end()) {
+      KOUT::outl("Couldnt find the file!");
+    }  else {
+    char charString[] = " My filesystem works !";
+    int counter = 0;
+   ssize_t useless;
+
+    FileAccess2 f(iter5->second);
+    for (int i=0;i<sizeof(charString);i++) {
+      char c = charString[i];
+      KOUT::out1(c);
+      //Clock::wait(1000);
+      useless = f.write(&c, 1);
+    }
+  }
+
+    KOUT::outl("Testing our FS x2!", kendl);
+    auto iter4 = kernelFS2.find("filesystem_test");
+    if (iter4 == kernelFS2.end()) {
+      KOUT::outl("Couldnt find the file!");
+    }  else {
+    //  KOUT::outl(iter4->second.start);
+      FileAccess2 f(iter4->second);
+      for (;;) {
+        char c;
+       if (f.read(&c, 1) == 0) break;
+       KOUT::out1(c);
+      }
+
 //    for (;;) {
 //      char c;
   //    if (f.read(&c, 1) == 0) break;
 //      KOUT::outl(c);
 //    }
-  }
-  */
 
+
+}
 
 
 #if TESTING_TIMER_TEST
