@@ -84,10 +84,11 @@ void kosMain() {
       char c = charString[i];
       KOUT::out1(c);
       //Clock::wait(1000);
-      useless = f.write(&c, 1);
+      useless = f.write(c, 1);
     }
   }
 
+    KOUT::outl("");
     KOUT::outl("Testing our FS x2!", kendl);
     auto iter4 = kernelFS2.find("filesystem_test");
     if (iter4 == kernelFS2.end()) {

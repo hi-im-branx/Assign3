@@ -48,7 +48,7 @@ struct RamFile {
 struct RamFile2 { // For assign 3
   vaddr vma;
   paddr pma;
-  int start;
+  mutable int start;
   int size;
   RamFile2(vaddr v, paddr p, int t, int s) : vma(v), pma(p), start(t), size(s) {}
 };
@@ -76,7 +76,7 @@ public:
   FileAccess2(const RamFile2& rf) : offset(rf.start), rf(rf) {}
   //virtual ssize_t pread(void *buf, size_t nbyte, off_t o);
   virtual ssize_t read(char *buf, size_t nbyte);
-  virtual ssize_t write(char *buf, size_t nbyte);
+  virtual ssize_t write(char a, size_t nbyte);
   //virtual ssize_t write(void *buf, size_t nybyte);
   //virtual off_t lseek(off_t o, int whence);
 };

@@ -16,6 +16,8 @@
 ******************************************************************************/
 #include "world/Access.h"
 #include "kernel/Multiboot.h"
+#include <iostream>
+#include <fstream>
 
 #include <cstring>
 
@@ -69,7 +71,22 @@ ssize_t FileAccess2::read(char *buf, size_t nbyte) {
   return nbyte;
 }
 
-ssize_t FileAccess2::write(char *buf, size_t nbyte) {
-  //KOUT::outl("we are writing");
+ssize_t FileAccess2::write(char a, size_t nbyte) {
+  int startR = rf.start;
+  if (startR != Access::veryLastCounter) {
+    for (int i=0; i < rf.size; i++){
+      Access::memoryArray[startR + i] = '\0';
+    }
+    startR = Access::veryLastCounter;
+    Access::memoryArray[startR] = a;
+    Access::veryLastCounter++;
+    rf.start = Access::veryLastCounter;
+  }
+
+  else {
+    Access::memoryArray[Access::veryLastCounter] = a;
+    Access::veryLastCounter++;
+  }
+
   return nbyte;
 }
