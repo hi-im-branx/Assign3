@@ -34,8 +34,8 @@ public:
   virtual ssize_t read(void *buf, size_t nbyte) { return -EBADF; }
   virtual ssize_t write(const void *buf, size_t nbyte) { return -EBADF; }
   virtual off_t lseek(off_t o, int whence) { return -EBADF; }
-  static char memoryArray[100000];
-  static int veryLastCounter;
+  static char memoryArray[100000]; // The array used to mimic memory for our filesystem
+  static int veryLastCounter; // An index pointer to the very last block in the array in use
 };
 
 struct RamFile {
@@ -48,8 +48,8 @@ struct RamFile {
 struct RamFile2 { // For assign 3
   vaddr vma;
   paddr pma;
-  mutable int start;
-  int size;
+  mutable int start; // The starting index of the file; needs to be changeable due to write() shifting positions
+  int size; // The size of the file
   RamFile2(vaddr v, paddr p, int t, int s) : vma(v), pma(p), start(t), size(s) {}
 };
 
@@ -73,12 +73,10 @@ class FileAccess2 : public Access {
   off_t offset;
   const RamFile2 &rf;
 public:
-  FileAccess2(const RamFile2& rf) : offset(rf.start), rf(rf) {}
-  //virtual ssize_t pread(void *buf, size_t nbyte, off_t o);
+  FileAccess2(const RamFile2& rf) : offset(rf.start), rf(rf) {} // The offset is initially set to the starting point of the file in the array
   virtual ssize_t read(char *buf, size_t nbyte);
   virtual ssize_t write(char a, size_t nbyte);
-  //virtual ssize_t write(void *buf, size_t nybyte);
-  //virtual off_t lseek(off_t o, int whence);
+
 };
 
 class KernelOutput;

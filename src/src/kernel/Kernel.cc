@@ -21,9 +21,7 @@
 #include "world/Access.h"
 #include "machine/Machine.h"
 #include "devices/Keyboard.h"
-
 #include "main/UserMain.h"
-
 #include <array>
 
 AddressSpace kernelSpace(true); // AddressSpace.h
@@ -56,59 +54,41 @@ void kosMain() {
 
  }
 
-
-  KOUT::outl("Testing our FS!", kendl);
-  auto iter2 = kernelFS2.find("filesystem_test");
+  auto iter2 = kernelFS2.find("filesystem_test"); // Testing our filesystems read()
   if (iter2 == kernelFS2.end()) {
     KOUT::outl("Couldnt find the file!");
   }  else {
-    //KOUT::outl(iter2->second.start);
     FileAccess2 f(iter2->second);
     for (;;) {
-      char c;
-     if (f.read(&c, 1) == 0) break;
-     KOUT::out1(c);
+      char c; // Read will put the character from our filesystem into &c
+     if (f.read(&c, 1) == 0) break; // If read returns 0 then we break out of the for loop
+     KOUT::out1(c); // Otherwise we print the character and loop
     }
-    KOUT::outl("found");
   }
-    auto iter5 = kernelFS2.find("filesystem_test");
+
+    auto iter5 = kernelFS2.find("filesystem_test"); // Testing our filesystems write()
     if (iter5 == kernelFS2.end()) {
       KOUT::outl("Couldnt find the file!");
     }  else {
-    char charString[] = " My filesystem works !";
-    int counter = 0;
-   ssize_t useless;
-
+    char charString[] = " My filesystem works !"; // The test string to write to our filesystem
+    ssize_t useless;
     FileAccess2 f(iter5->second);
-    for (int i=0;i<sizeof(charString);i++) {
+    for (int i=0;i<sizeof(charString);i++) { // Loop for the length of the input string
       char c = charString[i];
-      KOUT::out1(c);
-      //Clock::wait(1000);
-      useless = f.write(c, 1);
+      useless = f.write(c, 1); // Write the character to our filesystem; returns a uselesss value
     }
   }
 
-    KOUT::outl("");
-    KOUT::outl("Testing our FS x2!", kendl);
-    auto iter4 = kernelFS2.find("filesystem_test");
+    auto iter4 = kernelFS2.find("filesystem_test"); // Reading the file to make sure write() worked properly
     if (iter4 == kernelFS2.end()) {
       KOUT::outl("Couldnt find the file!");
     }  else {
-    //  KOUT::outl(iter4->second.start);
       FileAccess2 f(iter4->second);
       for (;;) {
         char c;
        if (f.read(&c, 1) == 0) break;
        KOUT::out1(c);
       }
-
-//    for (;;) {
-//      char c;
-  //    if (f.read(&c, 1) == 0) break;
-//      KOUT::outl(c);
-//    }
-
-
 }
 
 

@@ -175,8 +175,6 @@ void Multiboot::readModules(vaddr disp) {
       string cmd = tm->cmdline;
       string name = cmd.substr(0, cmd.find_first_of(' '));
       kernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );
-
-      //kernelFS2.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );
     }
   }
 }
@@ -191,37 +189,23 @@ void Multiboot::readModules2(vaddr disp) {
       multiboot_tag_module* tm = (multiboot_tag_module*)tag;
       string cmd = tm->cmdline;
       string name = cmd.substr(0, cmd.find_first_of(' '));
-      counterStart = counter;
-      auto iter3 = kernelFS.find(name);
-      KOUT::outl(name);
+      counterStart = counter; // Set counterStart to the beginning index of the files location in the memory array
+      auto iter3 = kernelFS.find(name); // Find the file in memory
       if (iter3 == kernelFS.end()) {
-        KOUT::outl("Couldnt find the file!!!!!!!!!!!!!!!!");
       }  else {
         FileAccess f(iter3->second);
         for (;;) {
           char c;
           if (f.read(&c, 1) == 0) break;
-          Access::memoryArray[counter] = c;
-        //  KOUT::outl(Access::memoryArray[counter]);
-          counter++;
+          Access::memoryArray[counter] = c; // Put the character into the array
+          counter++; // Increment the counter & loop
         }
       }
-      counterEnd = counter;
+      counterEnd = counter; // Set counterEnd to the ending index of the files location in the memory array
 
-      //Clock::wait(10000);
+      // Insert the file into our filesystem; the size of the file is (counterEnd - counterStart)
       kernelFS2.insert( {name, {tm->mod_start + disp, tm->mod_start, counterStart, counterEnd - counterStart}});
-
-
     }
   }
   Access::veryLastCounter = counter;
 }
-
-//  pointer = &c;
-//  pointer2 = (tm->mod_start + disp);
-//  (bufptr_t)(rf.vma + o)
-  //memcpy(pointer, pointer2, nbyte);
-  //if (c == '\0') break;
-//  if (f.read(&c, 1) == 0) break;
-//  Machine::memoryArray[counter] = c;
-//  counter++;

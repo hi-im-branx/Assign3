@@ -56,19 +56,18 @@ off_t FileAccess::lseek(off_t o, int whence) {
 
 ssize_t FileAccess2::read(char *buf, size_t nbyte) {
  int i;
- //char *bufptr = *buf;
  char d;
  int counter = 0;
  for (i=0; i<nbyte; i++){
-   d = Access::memoryArray[FileAccess2::offset];
-   *(buf + counter) = d;
-   FileAccess2::offset++;
-   counter++;
+   d = Access::memoryArray[FileAccess2::offset]; // Set d to the char in the index of FileAccess2's offset
+   *(buf + counter) = d; // Put d into the buffer + counter's memory address pointer
+   FileAccess2::offset++; // Increment the offset after each byte read
+   counter++; // Likewise with the counter
  }
-  if (d == '\0'){
+  if (d == '\0'){ // If the end of file is read, we terminate (return length of 0)
     nbyte = 0;
   }
-  return nbyte;
+  return nbyte; // Otherwise we return the length
 }
 
 ssize_t FileAccess2::write(char a, size_t nbyte) {
@@ -76,22 +75,21 @@ ssize_t FileAccess2::write(char a, size_t nbyte) {
   void* pttr;
   char* charPttr;
   pttr = charPttr;
-  if (startR != Access::veryLastCounter) {
-    for (int i=0; i < rf.size; i++){
+  if (startR != Access::veryLastCounter) { // Case 1: We haven't deleted the original file
+    for (int i=0; i < rf.size; i++){ // For every block in the file we set it to null
       Access::memoryArray[startR + i] = '\0';
       pttr = &Access::memoryArray[startR + i];
-      memcpy((bufptr_t)(rf.vma + offset + i), pttr, 1);
+      memcpy((bufptr_t)(rf.vma + offset + i), pttr, 1); // Likewise with the virtual memory address
     }
     startR = Access::veryLastCounter;
-    Access::memoryArray[startR] = a;
-    Access::veryLastCounter++;
-    rf.start = Access::veryLastCounter;
+    Access::memoryArray[startR] = a; // Write the char into the next available space (aka +1 of the very last block in the array)
+    Access::veryLastCounter++; // Increment veryLastCounter
+    rf.start = Access::veryLastCounter; // Set the starting location of the ramfile to be the last counter in the array
   }
 
-  else {
-    Access::memoryArray[Access::veryLastCounter] = a;
-    Access::veryLastCounter++;
+  else { // Case 2: We have already deleted the original file
+    Access::memoryArray[Access::veryLastCounter] = a; // We simply write the character into the veryLastCounter index
+    Access::veryLastCounter++; // And then increment veryLastCounter
   }
-  //memcpy((bufptr_t)(rf.vma + offset + (Access::veryLastCounter - offset)), (offset+Access::veryLastCounter), nbyte );
-  return nbyte;
+  return nbyte; // Return the bytes written
 }
